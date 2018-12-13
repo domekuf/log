@@ -1,19 +1,43 @@
+<style>
+    form textarea {
+        width: 80%;
+        height: 25%;
+    }
+</style>
 <form method="POST">
-    <textarea name="new"></textarea>
+    <textarea name="body"></textarea>
     <input type="submit"/>
 </form>
 <?php
+    // Implementing CRUD (CREATE READ UPDATE DELETE)
+
+    // READ
     $log = json_decode(file_get_contents("log.json"), true);
-    if (isset($_POST["new"])) {
-        $l["body"] = $_POST["new"];
-        $l["date"] = gmdate("D, d M Y H:i:s", time())." GMT";
-        array_unshift($log, $l);
+    if (isset($_POST["body"])) {
+        if (!isset($_POST["key"])) {
+            // CREATE
+            $l["body"] = $_POST["body"];
+            $l["date"] = gmdate("D, d M Y H:i:s", time())." GMT";
+            array_unshift($log, $l);
+        } elseif(!$_POST["delete"]) {
+            // UPDATE
+            $log[$_POST["key"]]["body"] = $_POST["body"];
+        } else {
+            // DELETE
+            unset($log[$_POST["key"]]);
+        }
         file_put_contents("log.json", json_encode($log, JSON_PRETTY_PRINT));
     }
-    foreach ($log as $l) {
+    foreach ($log as $k=>$l) {
 ?>
-        <h2><?=$l["date"]?></h2>
-        <p><?=$l["body"]?></p>
+        <form method="POST">
+            <h3><?=$l["date"]?></h3>
+            <textarea name="body"><?=$l["body"]?></textarea>
+            <input name="key" value="<?=$k?>" type="hidden"/>
+            <input id="delete-<?=$k?>" name="delete" type="checkbox" value="1"/>
+            <label for="delete-<?=$k?>">Delete</label>
+            <input type="submit" value="Update"/>
+        </form>
 <?php
     }
 ?>
