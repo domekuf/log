@@ -4,8 +4,11 @@
         height: 25%;
     }
 </style>
+<?php
+require_once "mdb-head.php"
+?>
 <form method="POST">
-    <textarea name="body"></textarea>
+    <pre><code><textarea name="body"></textarea></code></pre>
     <input type="submit"/>
 </form>
 <?php
@@ -32,7 +35,7 @@
 ?>
         <form method="POST">
             <h3><?=$l["date"]?></h3>
-            <textarea name="body"><?=$l["body"]?></textarea>
+            <pre><code><textarea name="body"><?=$l["body"]?></textarea></code></pre>
             <input name="key" value="<?=$k?>" type="hidden"/>
             <input id="delete-<?=$k?>" name="delete" type="checkbox" value="1"/>
             <label for="delete-<?=$k?>">Delete</label>
@@ -40,4 +43,5 @@
         </form>
 <?php
     }
+require_once "mdb-foot.php"
 ?>
