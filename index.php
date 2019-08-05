@@ -8,6 +8,7 @@
 require_once "mdb-head.php"
 ?>
 <form method="POST">
+    <input type="text" placeholder="Title" name="title"/>
     <pre><code><textarea name="body"></textarea></code></pre>
     <input type="submit"/>
 </form>
@@ -19,11 +20,13 @@ require_once "mdb-head.php"
     if (isset($_POST["body"])) {
         if (!isset($_POST["key"])) {
             // CREATE
+            $l["title"] = $_POST["title"];
             $l["body"] = $_POST["body"];
             $l["date"] = gmdate("D, d M Y H:i:s", time())." GMT";
             array_unshift($log, $l);
         } elseif(!$_POST["delete"]) {
             // UPDATE
+            $log[$_POST["key"]]["title"] = $_POST["title"];
             $log[$_POST["key"]]["body"] = $_POST["body"];
         } else {
             // DELETE
@@ -34,7 +37,8 @@ require_once "mdb-head.php"
     foreach ($log as $k=>$l) {
 ?>
         <form method="POST">
-            <h3><?=$l["date"]?></h3>
+            <input type="text" value="<?=$l["title"]?>" name="title"/>
+            <h4><?=$l["date"]?></h4>
             <pre><code><textarea name="body"><?=$l["body"]?></textarea></code></pre>
             <input name="key" value="<?=$k?>" type="hidden"/>
             <input id="delete-<?=$k?>" name="delete" type="checkbox" value="1"/>
